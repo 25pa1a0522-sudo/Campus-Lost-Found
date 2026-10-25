@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campus Lost & Found</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#120d17;
+  --bg-2:#1b1322;
+  --panel:rgba(33,24,38,.8);
+  --panel-strong:#241b2b;
+  --card:#201926;
+  --card-soft:#2c2136;
+  --text:#fdf0f9;
+  --muted:#ead3e8;
+  --line:rgba(255,177,221,.22);
+  --primary:#f8b4d9;
+  --primary-2:#f9a8d4;
+  --pink:#ffb4d9;
+  --green:#8fe8c5;
+  --amber:#f8d98d;
+  --red:#ff7aa2;
+  --shadow:rgba(23,10,24,.42);
+}
+@media(prefers-color-scheme:dark){:root{--bg:#120d17;--panel:rgba(33,24,38,.8);--text:#fdf0f9;--line:rgba(255,177,221,.22)}}
+*{box-sizing:border-box}
+body{margin:0;background:
+  radial-gradient(ellipse at 12% 8%, rgba(255,190,220,.38), transparent 34%),
+  radial-gradient(ellipse at 88% 16%, rgba(190,113,174,.34), transparent 36%),
+  radial-gradient(ellipse at 48% 92%, rgba(220,125,163,.28), transparent 42%),
+  linear-gradient(135deg, #59364f 0%, #402b49 48%, #684052 100%);
+color:var(--text);font:16px/1.5 "Inter", "Segoe UI", sans-serif}
+header{background:linear-gradient(135deg, rgba(36,21,39,.96), rgba(53,31,56,.94));color:#fff;padding:32px 20px 22px;box-shadow:0 22px 45px rgba(24,11,29,.42);border-bottom:1px solid rgba(255,180,217,.18);position:relative;overflow:hidden}
+header::before,header::after{content:"";position:absolute;border-radius:50%;background:radial-gradient(circle, rgba(255,180,217,.2), transparent 60%);pointer-events:none}
+header::before{width:420px;height:420px;right:-110px;top:-180px}
+header::after{width:300px;height:300px;left:-80px;bottom:-140px}
+.wrap{max-width:980px;margin:0 auto;position:relative;z-index:1}
+h1{font:800 clamp(2rem,6vw,3.4rem)/1 "Space Grotesk","Inter",sans-serif;margin:0 0 6px;letter-spacing:-.06em;color:#fff4fb}
+header p{margin:0 0 16px;opacity:.92;font-size:1.08rem;color:var(--muted)}
+.top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+.stat{background:linear-gradient(135deg, rgba(46,31,51,.86), rgba(27,19,31,.8));color:var(--text);border:1px solid var(--line);border-radius:16px;padding:12px 16px;min-width:110px;box-shadow:0 12px 25px rgba(15,10,20,.22);backdrop-filter:blur(8px)}
+.stat b{display:block;font:800 1.8rem/1 "Space Grotesk","Inter",sans-serif;letter-spacing:-.04em;color:var(--pink)}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;border-radius:12px;padding:10px 16px;font-weight:700;background:linear-gradient(135deg, var(--primary), var(--primary-2));color:#2a1027;transition:transform .18s ease,box-shadow .18s ease,opacity .18s ease;box-shadow:0 0 18px rgba(255,180,217,.18)}
+button:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(255,180,217,.22)}
+button:disabled{opacity:.65;cursor:not-allowed;transform:none;box-shadow:none}
+button.ghost{background:rgba(26,17,31,.6);color:var(--text);border:1px solid var(--line)}
+button.white{background:#fffafc;color:#2a1027}
+button.bad{background:linear-gradient(135deg,var(--red),#d6407d)}button.good{background:linear-gradient(135deg,#91f0ca,#46b6ae)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+main.wrap{padding-top:20px}
+.bar{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 12px;padding:12px;background:linear-gradient(135deg, rgba(29,22,32,.86), rgba(18,15,24,.9));border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 30px rgba(17,10,18,.25);backdrop-filter:blur(14px)}
+.bar input,.bar select,form input,form select,form textarea{padding:12px 14px;border-radius:12px;border:1px solid rgba(255,180,217,.18);background:rgba(20,15,24,.7);width:100%;color:var(--text);box-shadow:inset 0 1px 1px rgba(255,255,255,.04)}
+.bar input{flex:1 1 280px;width:auto}.bar select{width:auto;min-width:160px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;padding-bottom:60px}
+.card{background:linear-gradient(180deg, rgba(31,22,36,.9), rgba(16,12,20,.9));border:1px solid rgba(255,180,217,.16);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 18px 34px rgba(17,10,18,.34),inset 0 1px 0 rgba(255,255,255,.04);transition:transform .18s ease,box-shadow .18s ease}
+.card{position:relative}
+.more-menu{position:absolute;top:10px;right:10px;z-index:5}
+.more-menu summary{list-style:none;display:grid;place-items:center;width:38px;height:38px;border:1px solid rgba(255,180,217,.28);border-radius:12px;background:rgba(24,15,28,.88);color:#fff;font-size:1.5rem;font-weight:800;line-height:1;cursor:pointer;backdrop-filter:blur(10px)}
+.more-menu summary::-webkit-details-marker{display:none}
+.menu-options{position:absolute;top:44px;right:0;display:grid;gap:4px;width:174px;padding:6px;background:rgba(28,19,33,.98);border:1px solid rgba(255,180,217,.22);border-radius:12px;box-shadow:0 14px 30px rgba(12,8,16,.45);backdrop-filter:blur(14px)}
+.menu-options button{width:100%;padding:9px 10px;text-align:left;background:transparent;color:var(--text);border:0;border-radius:8px;box-shadow:none;font-size:.92rem}
+.menu-options button:hover{background:rgba(255,180,217,.12);transform:none;box-shadow:none}
+.menu-options button.menu-delete{color:#ff9aad}
+.card:hover{transform:translateY(-2px);box-shadow:0 24px 42px rgba(17,10,18,.42),inset 0 1px 0 rgba(255,255,255,.04)}
+.card img{width:100%;height:170px;object-fit:cover;background:linear-gradient(135deg,#2a1d2d,#422b40)}
+.ph{height:80px;background:linear-gradient(135deg,#261a2e,#3a2940)}
+.body{padding:0;display:flex;flex-direction:column;gap:8px;flex:1}
+.tag{align-self:flex-start;font-weight:800;font-size:.9rem;padding:6px 12px;border-radius:10px;color:#fff;margin:14px 0 0 16px;box-shadow:0 8px 18px rgba(255,180,217,.14)}
+.t-lost{background:linear-gradient(135deg,#ff7aa2,#d9465f)}.t-found{background:linear-gradient(135deg,#8fe8c5,#49a88d)}.t-ret{background:linear-gradient(135deg,#f8a5d2,#d57be6)}
+.t-lost{background:linear-gradient(135deg,#ff7aa2,#d9465f)}.t-found{background:linear-gradient(135deg,#ff8a65,#d74747)}.t-ret{background:linear-gradient(135deg,#40bd87,#21865f)}
+.card h3{margin:0 16px 4px;font:800 1.7rem/1.2 "Space Grotesk","Inter",sans-serif;color:#fff7fd;letter-spacing:-.04em}
+.meta{font-size:1rem;opacity:.9;margin:0 16px;color:var(--muted);line-height:1.6}
+.meta:nth-of-type(2){margin-top:0}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin:auto 16px 16px;padding-top:12px;border-top:1px solid rgba(255,180,217,.15);width:calc(100% - 32px)}
+.acts button{flex:1 1 0;min-width:110px;justify-content:center;display:inline-flex;align-items:center;background:rgba(20,15,24,.72);color:var(--text);border:1px solid rgba(255,180,217,.15);font-weight:800;padding:9px 12px}
+.acts button.good{background:linear-gradient(135deg,#f7c6df,#f29ad2);color:#2a1027;border-color:transparent}
+.acts button.ghost{background:transparent;color:var(--text);border-color:rgba(255,180,217,.15)}
+.acts button.bad{background:linear-gradient(135deg,#ff7aa2,#d9465f);color:#fff;border-color:transparent}
+.social-row{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 12px}
+.social-row button{padding:7px 10px;font-size:.92rem;background:rgba(30,18,31,.76);color:var(--text);border:1px solid rgba(255,180,217,.15);font-weight:800}
+.social-row button.share{background:linear-gradient(135deg, rgba(255,180,217,.12), rgba(255,160,200,.14));border-color:rgba(255,180,217,.22)}
+.comment-box{margin:0 16px 16px;padding:12px;border:1px solid rgba(255,180,217,.15);border-radius:12px;background:linear-gradient(180deg, rgba(35,22,38,.74), rgba(22,17,27,.8))}
+.comment-box h4{margin:0 0 8px;font-size:1rem;color:#fff3fb}
+.comment-list{display:grid;gap:8px;margin-bottom:10px}
+.comment-item{background:rgba(255,255,255,.03);border-radius:10px;padding:8px 10px;border:1px solid rgba(255,180,217,.12);color:var(--muted);font-size:.93rem}
+.comment-item b{display:block;margin-bottom:2px;color:#fff}
+.comment-form{display:flex;gap:8px;flex-wrap:wrap}
+.comment-form input{flex:1 1 180px;padding:9px 10px;border-radius:10px;border:1px solid rgba(255,180,217,.18);background:rgba(20,15,24,.72);color:var(--text)}
+.comment-form button{background:linear-gradient(135deg,#f9c8e1,#f8a5d2);border:0;padding:9px 12px;color:#2a1027;font-weight:800}
+.empty{grid-column:1/-1;text-align:center;padding:50px 10px;color:var(--text);opacity:.9}
+dialog{border:0;border-radius:18px;padding:22px;max-width:520px;width:calc(100% - 24px);background:linear-gradient(180deg, rgba(28,18,32,.96), rgba(13,10,17,.98));color:var(--text);border:1px solid rgba(255,180,217,.18);box-shadow:0 24px 50px rgba(17,10,18,.44)}
+dialog::backdrop{background:rgba(12,8,14,.7)}
+form{display:grid;gap:10px}label{font-weight:600;font-size:.92rem;color:var(--text)}
+.claim{border:1px solid rgba(255,180,217,.15);border-radius:12px;padding:10px;margin:8px 0;background:rgba(255,255,255,.02)}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(20,15,24,.94);color:#fff4fb;padding:10px 18px;border-radius:12px;display:none;z-index:9;border:1px solid rgba(255,180,217,.18);box-shadow:0 18px 30px rgba(0,0,0,.25)}
+.warn{background:rgba(255,180,217,.08);color:#fff1f7;padding:12px;border-radius:12px;margin:14px 0;border:1px solid rgba(255,180,217,.18)}
+ .help{background:linear-gradient(135deg, rgba(255,180,217,.08), rgba(248,165,210,.12));color:#fff6fb;border:1px solid rgba(255,180,217,.18);padding:14px 18px;border-radius:16px;margin:8px 0 0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;box-shadow:0 8px 16px rgba(17,24,39,.2);font-weight:700}
+ .promise-box{background:linear-gradient(180deg, rgba(28,20,33,.8), rgba(22,17,26,.82));border:1px solid rgba(255,180,217,.18);border-radius:18px;padding:0;box-shadow:0 20px 34px rgba(17,10,18,.28);margin:16px 0 10px;overflow:hidden;backdrop-filter:blur(12px)}
+ .promise-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;cursor:pointer;background:transparent;width:100%;border:0;font:700 1.65rem/1.2 "Space Grotesk","Inter",sans-serif;color:#fff5fb;letter-spacing:-.03em;text-align:left}
+ .promise-toggle span{display:flex;align-items:center;gap:12px}
+.promise-toggle .heart{font-size:1.15rem;color:var(--pink)}
+ .promise-toggle .caret{font-size:1.3rem;transition:transform .2s ease;color:var(--pink)}
+ .promise-box.open .promise-toggle .caret{transform:rotate(90deg)}
+ .promise-content{display:none;padding:0 20px 18px}
+ .promise-box.open .promise-content{display:block}
+ .promise-box ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+ .promise-box li{position:relative;padding-left:20px;color:var(--muted);font-size:1rem;line-height:1.5}
+ .promise-box li::before{content:"•";position:absolute;left:0;top:0;font-size:1.3rem;color:var(--pink)}
+ .promise-box .alert{margin-top:16px;background:linear-gradient(135deg, rgba(255,180,217,.12), rgba(255,138,186,.12));color:#fff4fb;border:1px solid rgba(255,180,217,.18);border-radius:14px;padding:14px 16px;font-weight:700;line-height:1.4;box-shadow:0 10px 24px rgba(15,23,42,.18)}
+.confirm-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.confirm-actions .bad{color:#fff}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+ <div class="top">
+  <div><h1>Campus Lost & Found</h1><p>Lost something? Found something? Post it here and help it get home.</p></div>
+  <div id="auth"></div>
+ </div>
+ <div class="stats">
+  <div class="stat"><b id="sLost">0</b>still lost</div>
+  <div class="stat"><b id="sFound">0</b>waiting for owner</div>
+  <div class="stat"><b id="sRet">0</b>returned</div>
+ </div>
+</div></header>
+
+<main class="wrap">
+ <div id="cfgWarn" class="warn" hidden>Firebase isn’t set up yet. Paste your config into <code>firebaseConfig</code> near the bottom of this file (see README).</div>
+ <div class="bar">
+  <input id="q" type="search" placeholder="Search items, places, categories" aria-label="Search">
+  <select id="fType" aria-label="Type"><option value="">All posts</option><option value="lost">Lost</option><option value="found">Found</option></select>
+  <select id="fCat" aria-label="Category"></select>
+  <select id="fStat" aria-label="Status"><option value="open">Open</option><option value="returned">Returned</option><option value="">All</option></select>
+  <button id="newBtn">Post an item</button>
+ </div>
+ <div id="loginHint" class="warn" hidden>Sign in with Google to post an item or make a claim.</div>
+ <div id="helpNote" class="help">Lost something? Found something? Be honest, be kind, and help it get home.</div>
+ <div class="promise-box open" id="promiseBox">
+  <button class="promise-toggle" type="button" aria-expanded="true">
+   <span><span class="heart">♥</span> Our little promise: be genuine</span>
+   <span class="caret">›</span>
+  </button>
+  <div class="promise-content">
+   <ul>
+    <li>Only claim something that is really yours. Describe it from memory, not by guessing.</li>
+    <li>Found something? Thank you! Please hand it in, or don’t keep it. Someone is having a rough day without it.</li>
+    <li>Be patient and kind. Finders are helping for free.</li>
+    <li>Never share someone’s ID, phone, or card details publicly.</li>
+    <li>Do not post false information, misleading updates, or abusive comments. This hurts trust and may lead to account restrictions or reporting.</li>
+    <li>Say thanks when you get your stuff back. It makes everyone want to help again.</li>
+   </ul>
+   <div class="alert">Heads up: your name and college ID are saved with every claim. False claims, abusive comments, or harmful behavior may lead to restricted access, warnings, or reporting to the college administration.</div>
+  </div>
+ </div>
+ <div id="grid" class="grid"></div>
+</main>
+
+<dialog id="postDlg"><form id="postForm">
+ <h2 id="postTitle" style="margin:0">Post an item</h2>
+ <label>Type<select id="pType"><option value="lost">I lost something</option><option value="found">I found something</option></select></label>
+ <label>Item name<input id="pTitle" required maxlength="80" placeholder="Black leather wallet"></label>
+ <label>Category<select id="pCat"></select></label>
+ <label>Where<input id="pPlace" required maxlength="80" placeholder="Library, 2nd floor"></label>
+ <label>Date<input id="pDate" type="date" required></label>
+ <label>Contact (phone or email)<input id="pContact" required maxlength="80"></label>
+ <label>Photo (optional)<input id="pPhoto" type="file" accept="image/*"></label>
+ <div id="foundOnly">
+  <label>Question only the owner can answer<input id="pQ" maxlength="100" placeholder="What card is inside?"></label>
+  <label>Correct answer (kept private)<input id="pA" maxlength="100"></label>
+ </div>
+ <div id="postError" class="warn" role="alert" hidden></div>
+ <div class="acts"><button type="submit" id="postBtn">Post item</button><button type="button" class="ghost" data-close="postDlg">Cancel</button></div>
+</form></dialog>
+
+<dialog id="claimDlg"><form id="claimForm">
+ <h2 style="margin:0">This is mine</h2>
+ <p id="claimQ"></p>
+ <input id="claimA" required maxlength="100" placeholder="Your answer">
+ <p class="meta">Please only claim items that are truly yours. Being honest helps everyone and keeps our community fair, respectful, and supportive.</p>
+ <div class="acts"><button type="submit">Send claim</button><button type="button" class="ghost" data-close="claimDlg">Cancel</button></div>
+</form></dialog>
+
+<dialog id="revDlg"><h2 style="margin:0">Claims</h2><div id="revBody"></div>
+ <div class="acts"><button class="ghost" data-close="revDlg">Close</button></div></dialog>
+
+<dialog id="deleteDlg" aria-labelledby="deleteTitle">
+ <h2 id="deleteTitle" style="margin:0">Are you sure?</h2>
+ <p>Do you want to delete this post?</p>
+ <div class="confirm-actions"><button type="button" class="ghost" id="deleteCancel">Cancel</button><button type="button" class="bad" id="confirmDelete">OK</button></div>
+</dialog>
+
+<div id="toast" class="toast" role="status"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, addDoc, doc, getDoc, setDoc, updateDoc, deleteDoc, getDocs, onSnapshot, query, orderBy, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// 1) PASTE YOUR FIREBASE CONFIG HERE (Firebase console > Project settings > Your apps)
+const firebaseConfig = {
+  apiKey: "AIzaSyBKG_OMFw1_MWkP6jCwWms_WxEDp2kRywQ",
+  authDomain: "campus-lost-and-found-eab4a.firebaseapp.com",
+  projectId: "campus-lost-and-found-eab4a",
+  storageBucket: "campus-lost-and-found-eab4a.firebasestorage.app",
+  messagingSenderId: "814052446740",
+  appId: "1:814052446740:web:3dd102855f6dfe6867cd01",
+  measurementId: "G-GKYPVZQB7K"
+};
+// 2) Optional: your college name for the header
+const COLLEGE = "";
+const CATS = ["Wallet / Cards","Phone / Electronics","Keys","Bag","Books / Notes","ID Card","Clothing","Other"];
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const toast = m => { const t=$("toast"); t.textContent=m; t.style.display="block"; clearTimeout(t._t); t._t=setTimeout(()=>t.style.display="none",3200); };
+if (COLLEGE) document.querySelector("h1").textContent = COLLEGE + " Lost & Found";
+
+if (firebaseConfig.apiKey === "YOUR_API_KEY") { $("cfgWarn").hidden = false; }
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app), db = getFirestore(app);
+let user = null, isAdmin = false, items = [], claimItem = null, commentsByPost = {}, pendingDeleteId = null, editingItemId = null, unsubscribeItems = null;
+
+$("pCat").innerHTML = CATS.map(c=>`<option>${esc(c)}</option>`).join("");
+$("fCat").innerHTML = `<option value="">All categories</option>` + CATS.map(c=>`<option>${esc(c)}</option>`).join("");
+$("pDate").value = new Date().toISOString().slice(0,10);
+
+// ---------- Auth ----------
+onAuthStateChanged(auth, async u => {
+  if (unsubscribeItems) { unsubscribeItems(); unsubscribeItems = null; }
+  user = u; isAdmin = false; items = []; commentsByPost = {};
+  if (u) { try { isAdmin = (await getDoc(doc(db,"admins",u.uid))).exists(); } catch(e){} }
+  if (u) {
+    unsubscribeItems = onSnapshot(query(collection(db,"items"), orderBy("createdAt","desc")),
+      async s => { items = s.docs.map(d => ({id:d.id, ...d.data()})); await refreshCommentsForItems(); render(); },
+      e => toast("Can’t load posts: " + e.code));
+  }
+  $("auth").innerHTML = u
+    ? `<span>${esc(u.displayName||u.email)}${isAdmin?" (admin)":""}</span> <button class="white" id="outBtn">Sign out</button>`
+    : `<button class="white" id="inBtn">Sign in with Google</button>`;
+  $("inBtn")?.addEventListener("click", login);
+  $("outBtn")?.addEventListener("click", () => signOut(auth));
+  render();
+});
+async function login(){ try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e){ toast("Sign-in failed: " + (e.code||e.message)); } }
+const needLogin = () => { if (!user) { toast("Please sign in first."); return true; } return false; };
+
+// ---------- Live data ----------
+async function refreshCommentsForItems(){
+  const ids = items.map(i => i.id);
+  const results = await Promise.all(ids.map(async id => {
+    const snap = await getDocs(collection(db, "items", id, "comments"));
+    commentsByPost[id] = snap.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+  }));
+  return results;
+}
+
+function render(){
+  const q = $("q").value.trim().toLowerCase(), ft = $("fType").value, fc = $("fCat").value, fs = $("fStat").value;
+  const hint = $("loginHint");
+  const helpNote = $("helpNote");
+  if (!user) {
+    hint.hidden = false;
+    hint.textContent = "Sign in with Google to post an item or make a claim.";
+    helpNote.textContent = "Lost something? Found something? Sign in, be honest, and help it get home.";
+  } else {
+    hint.hidden = true;
+    helpNote.textContent = "Lost something? Found something? Be honest, be kind, and help it get home.";
+  }
+  $("sLost").textContent = items.filter(i=>i.type==="lost" && i.status==="open").length;
+  $("sFound").textContent = items.filter(i=>i.type==="found" && i.status==="open").length;
+  $("sRet").textContent = items.filter(i=>i.status==="returned").length;
+  const list = items.filter(i =>
+    (!ft||i.type===ft) && (!fc||i.category===fc) && (!fs||i.status===fs) &&
+    (!q || [i.title,i.place,i.category].join(" ").toLowerCase().includes(q)));
+  $("grid").innerHTML = list.length ? list.map(card).join("") :
+    `<div class="empty"><b>Nothing here yet.</b><br>${user ? "Post an item or change the filters." : "Sign in with Google to post a new item."}</div>`;
+}
+function card(i){
+  const mine = user && i.uid === user.uid, can = mine || isAdmin, ret = i.status === "returned";
+  const tag = ret ? `<span class="tag t-ret">Returned</span>` : `<span class="tag t-${i.type}">${i.type==="lost"?"Lost":"Found"}</span>`;
+  const reactions = i.reactions || {};
+  const comments = commentsByPost[i.id] || [];
+  const userReaction = user && i.userReactions ? i.userReactions[user.uid] : null;
+  let acts = "";
+  let menu = "";
+  if (!ret && i.type==="found" && !mine && i.verifyQ) acts += `<button data-a="claim" data-id="${i.id}">This is mine</button>`;
+  if (can) menu = `<details class="more-menu"><summary aria-label="More post actions" title="More actions">&#8942;</summary><div class="menu-options">
+    ${mine ? `<button type="button" data-a="edit" data-id="${i.id}">Edit</button>` : ""}
+    ${!ret ? `<button type="button" data-a="ret" data-id="${i.id}">Mark returned</button>` : `<button type="button" data-a="reopen" data-id="${i.id}">Reopen</button>`}
+    ${!ret && i.type==="found" ? `<button type="button" data-a="rev" data-id="${i.id}">Review claims</button>` : ""}
+    <button type="button" class="menu-delete" data-a="del" data-id="${i.id}">Delete</button>
+   </div></details>`;
+  return `<article class="card">${i.photo?`<img src="${esc(i.photo)}" alt="${esc(i.title)}">`:`<div class="ph"></div>`}${menu}
+   <div class="body">${tag}<h3>${esc(i.title)}</h3>
+   <div class="meta">${esc(i.category)} · ${esc(i.place)} · ${esc(i.date)}</div>
+   <div class="meta">Contact: ${esc(i.contact)}</div>
+   <div class="social-row">
+      <button data-a="react" data-id="${i.id}" data-r="love" class="share" ${userReaction === "love" ? "style=\"box-shadow:0 0 0 2px rgba(115,228,255,.4)\"" : ""}>❤️ ${reactions.love || 0}${userReaction==="love" ? " ✓" : ""}</button>
+      <button data-a="react" data-id="${i.id}" data-r="thanks" class="share" ${userReaction === "thanks" ? "style=\"box-shadow:0 0 0 2px rgba(139,92,246,.4)\"" : ""}>🙏 ${reactions.thanks || 0}${userReaction==="thanks" ? " ✓" : ""}</button>
+      <button data-a="share" data-id="${i.id}" class="share">📤 Share</button>
+   </div>
+   <div class="comment-box">
+    <h4>💬 Comments (${comments.length})</h4>
+    <div class="comment-list">${comments.length ? comments.slice(-3).map(c => `
+      <div class="comment-item">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+          <b>👤 ${esc(c.name || "Student")}</b>
+          ${(user && (c.uid === user.uid || isAdmin)) ? `<button class="ghost" type="button" data-comment-delete data-post-id="${i.id}" data-comment-id="${c.id}" style="padding:4px 8px;font-size:.72rem;">🗑️ Delete</button>` : ""}
+        </div>
+        <div>💬 ${esc(c.text || "")}</div>
+      </div>
+    `).join("") : `<div class="comment-item"><b>👥 Community</b>💬 No comments yet. Say thanks or add a quick update.</div>`}</div>
+    <form class="comment-form" data-id="${i.id}">
+      <input type="text" maxlength="140" placeholder="Write a thank you or update" aria-label="Write a comment" required>
+      <button type="submit">📤 Post</button>
+    </form>
+   </div>
+  ${acts ? `<div class="acts">${acts}</div>` : ""}</div></article>`;
+}
+["q","fType","fCat","fStat"].forEach(id => $(id).addEventListener("input", render));
+
+// ---------- Actions ----------
+$("grid").addEventListener("click", async e => {
+  const b = e.target.closest("button[data-a]"); if (!b) return;
+  const menu = b.closest(".more-menu"); if (menu) menu.open = false;
+  const id = b.dataset.id, it = items.find(x=>x.id===id); if (!it) return;
+  try {
+    if (b.dataset.a==="claim") { if (needLogin()) return; claimItem = it; $("claimQ").textContent = it.verifyQ; $("claimA").value=""; $("claimDlg").showModal(); }
+    if (b.dataset.a==="edit") {
+      if (!user || it.uid !== user.uid) { toast("Only the person who posted this item can edit it."); return; }
+      editingItemId = id;
+      $("postTitle").textContent = "Edit item";
+      $("postBtn").textContent = "Save changes";
+      $("pType").value = it.type || "lost";
+      $("pTitle").value = it.title || "";
+      $("pCat").value = it.category || "";
+      $("pPlace").value = it.place || "";
+      $("pDate").value = it.date || "";
+      $("pContact").value = it.contact || "";
+      $("pQ").value = it.verifyQ || "";
+      $("pA").value = "";
+      $("pA").placeholder = it.type === "found" ? "Leave blank to keep the current answer" : "Needed only if you add a verification question";
+      $("pPhoto").value = "";
+      $("postError").hidden = true;
+      $("postError").textContent = "";
+      $("pType").onchange();
+      $("postDlg").showModal();
+    }
+    if (b.dataset.a==="ret") { await updateDoc(doc(db,"items",id),{status:"returned"}); toast("Marked returned. 🎉"); }
+    if (b.dataset.a==="reopen") { await updateDoc(doc(db,"items",id),{status:"open"}); toast("Reopened."); }
+    if (b.dataset.a==="del") { pendingDeleteId=id; $("deleteDlg").showModal(); }
+    if (b.dataset.a==="rev") openReview(it);
+    if (b.dataset.a==="share") {
+      const shareText = `Check this item on Campus Lost & Found: ${it.title} - ${it.place}`;
+      if (navigator.share) {
+        await navigator.share({ title: "Campus Lost & Found", text: shareText, url: window.location.href });
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(shareText + " " + window.location.href);
+        toast("Post details copied to clipboard.");
+      } else {
+        toast("Share is not supported in this browser.");
+      }
+    }
+    if (b.dataset.a==="react") {
+      if (needLogin()) return;
+      const current = it.reactions || {};
+      const key = b.dataset.r || "love";
+      const previousKey = it.userReactions && it.userReactions[user.uid] ? it.userReactions[user.uid] : null;
+      const nextReactions = { ...current };
+      const nextUserReactions = { ...(it.userReactions || {}) };
+      if (previousKey === key) {
+        nextReactions[key] = Math.max((nextReactions[key] || 0) - 1, 0);
+        nextUserReactions[user.uid] = null;
+        await updateDoc(doc(db,"items",id),{ reactions: nextReactions, userReactions: nextUserReactions });
+        toast("Reaction removed.");
+        return;
+      }
+      if (previousKey) {
+        nextReactions[previousKey] = Math.max((nextReactions[previousKey] || 0) - 1, 0);
+      }
+      nextReactions[key] = (nextReactions[key] || 0) + 1;
+      nextUserReactions[user.uid] = key;
+      await updateDoc(doc(db,"items",id),{ reactions: nextReactions, userReactions: nextUserReactions });
+      toast(previousKey ? "Reaction updated." : "Thank you for the support.");
+    }
+  } catch(err){ toast("Not allowed: " + (err.code||err.message)); }
+});
+
+document.addEventListener("click", async e => {
+  const delBtn = e.target.closest("[data-comment-delete]");
+  if (!delBtn) return;
+  if (!user) { toast("Please sign in first."); return; }
+  const postId = delBtn.dataset.postId;
+  const commentId = delBtn.dataset.commentId;
+  const comment = (commentsByPost[postId] || []).find(c => c.id === commentId);
+  if (!comment) return;
+  if (!(comment.uid === user.uid || isAdmin)) { toast("You can only delete your own comment."); return; }
+  if (!confirm("Delete this comment?")) return;
+  try {
+    await deleteDoc(doc(db, "items", postId, "comments", commentId));
+    await refreshCommentsForItems();
+    render();
+    toast("Comment deleted.");
+  } catch (err) {
+    toast("Couldn’t delete comment: " + (err.code || err.message));
+  }
+});
+$("grid").addEventListener("submit", async e => {
+  const form = e.target.closest(".comment-form");
+  if (!form) return;
+  e.preventDefault();
+  if (needLogin()) return;
+  const id = form.dataset.id;
+  const input = form.querySelector("input");
+  const text = input.value.trim();
+  if (!text) return;
+  try {
+    await addDoc(collection(db, "items", id, "comments"), {
+      uid: user.uid,
+      name: user.displayName || user.email || "Student",
+      text,
+      createdAt: serverTimestamp()
+    });
+    input.value = "";
+    await refreshCommentsForItems();
+    render();
+    toast("Comment posted.");
+  } catch(err){ toast("Couldn’t post comment: " + (err.code||err.message)); }
+});
+document.addEventListener("click", e => { const c = e.target.closest("[data-close]"); if (c) $(c.dataset.close).close(); });
+document.addEventListener("click", e => {
+  if (!e.target.closest(".more-menu")) document.querySelectorAll(".more-menu[open]").forEach(menu => { menu.open = false; });
+});
+
+$("deleteCancel").addEventListener("click", () => { pendingDeleteId=null; $("deleteDlg").close(); });
+$("confirmDelete").addEventListener("click", async () => {
+  const id = pendingDeleteId;
+  if (!id) return;
+  pendingDeleteId = null;
+  $("deleteDlg").close();
+  try {
+    await deleteDoc(doc(db,"items",id));
+    toast("Deleted.");
+  } catch(err) {
+    toast("Couldn’t delete post: " + (err.code || err.message));
+  }
+});
+
+$("newBtn").onclick = () => {
+  if (needLogin()) return;
+  editingItemId = null;
+  $("postForm").reset();
+  $("postTitle").textContent = "Post an item";
+  $("postBtn").textContent = "Post item";
+  $("pA").placeholder = "";
+  $("postError").hidden = true;
+  $("postError").textContent = "";
+  $("pDate").value = new Date().toISOString().slice(0,10);
+  $("pType").onchange();
+  $("postDlg").showModal();
+};
+$("pType").onchange = () => $("foundOnly").style.display = $("pType").value==="found" ? "" : "none";
+$("pType").onchange();
+
+const promiseToggle = document.querySelector(".promise-toggle");
+const promiseBox = document.getElementById("promiseBox");
+promiseToggle?.addEventListener("click", () => {
+  const open = promiseBox.classList.toggle("open");
+  promiseToggle.setAttribute("aria-expanded", String(open));
+});
+
+function compress(file){ return new Promise((res,rej)=>{
+  const img = new Image(), url = URL.createObjectURL(file);
+  img.onload = () => { const s = Math.min(1, 800/Math.max(img.width,img.height));
+    const c = document.createElement("canvas"); c.width=img.width*s; c.height=img.height*s;
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(url); res(c.toDataURL("image/jpeg",.7)); };
+  img.onerror = rej; img.src = url; }); }
+
+$("postForm").addEventListener("submit", async e => {
+  e.preventDefault(); if (needLogin()) return;
+  const btn = $("postBtn"); btn.disabled = true;
+  $("postError").hidden = true;
+  $("postError").textContent = "";
+  const wasEditing = Boolean(editingItemId);
+  try {
+    const type = $("pType").value, f = $("pPhoto").files[0];
+    const data = { type, title:$("pTitle").value.trim(), category:$("pCat").value, place:$("pPlace").value.trim(),
+      date:$("pDate").value, contact:$("pContact").value.trim(),
+      verifyQ: type==="found" ? $("pQ").value.trim() : "" };
+    if (f) data.photo = await compress(f);
+    const answer = $("pA").value.trim();
+    const batch = writeBatch(db);
+    if (wasEditing) {
+      const existing = items.find(item => item.id === editingItemId);
+      if (!existing) throw new Error("This post is no longer available.");
+      const verificationChanged = type === "found" && data.verifyQ &&
+        (existing.type !== "found" || data.verifyQ !== (existing.verifyQ || ""));
+      if (verificationChanged && !answer) {
+        $("postError").textContent = "Add a private answer or remove the verification question.";
+        $("postError").hidden = false;
+        btn.disabled = false;
+        return;
+      }
+      const itemRef = doc(db,"items",editingItemId);
+      const secretRef = doc(db,"items",editingItemId,"secret","answer");
+      batch.update(itemRef,data);
+      if (type === "found" && data.verifyQ && answer) batch.set(secretRef,{answer});
+      if (existing.type === "found" && (type !== "found" || !data.verifyQ) && existing.verifyQ) {
+        const secretSnapshot = await getDoc(secretRef);
+        if (secretSnapshot.exists()) batch.delete(secretRef);
+      }
+    } else {
+      data.photo = data.photo || "";
+      data.status = "open";
+      data.uid = user.uid;
+      data.createdAt = serverTimestamp();
+      const ref = doc(collection(db,"items"));
+      batch.set(ref,data);
+      if (type === "found" && data.verifyQ) batch.set(doc(db,"items",ref.id,"secret","answer"),{answer});
+    }
+    await batch.commit();
+    editingItemId = null;
+    $("postForm").reset();
+    $("postTitle").textContent = "Post an item";
+    $("postBtn").textContent = "Post item";
+    $("pA").placeholder = "";
+    $("pDate").value = new Date().toISOString().slice(0,10);
+    $("pType").onchange();
+    $("postDlg").close();
+    toast(wasEditing ? "Changes saved." : "Posted!");
+  } catch(err){
+    $("postError").textContent = `${wasEditing ? "Couldn’t save changes" : "Couldn’t post"}: ` + (err.code||err.message);
+    $("postError").hidden = false;
+  }
+  btn.disabled = false;
+});
+
+$("claimForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  try {
+    await addDoc(collection(db,"items",claimItem.id,"claims"),
+      {uid:user.uid, name:user.displayName||user.email, answer:$("claimA").value.trim(), status:"pending", createdAt:serverTimestamp()});
+    $("claimDlg").close(); toast("Claim sent. The poster will review it.");
+  } catch(err){ toast("Couldn’t send: " + (err.code||err.message)); }
+});
+
+async function openReview(it){
+  $("revBody").innerHTML = "Loading…"; $("revDlg").showModal();
+  try {
+    const sec = await getDoc(doc(db,"items",it.id,"secret","answer"));
+    const cs = await getDocs(collection(db,"items",it.id,"claims"));
+    const right = sec.exists() ? sec.data().answer : "(none set)";
+    $("revBody").innerHTML = `<p class="meta">Question: ${esc(it.verifyQ)}<br>Your private answer: <b>${esc(right)}</b></p>` +
+      (cs.empty ? "<p>No claims yet.</p>" : cs.docs.map(d => { const c=d.data();
+        return `<div class="claim"><b>${esc(c.name)}</b> says: “${esc(c.answer)}” <i>(${esc(c.status)})</i>
+        ${c.status==="pending"?`<div class="acts"><button class="good" data-c="${d.id}" data-i="${it.id}" data-s="approved">Approve</button><button class="bad" data-c="${d.id}" data-i="${it.id}" data-s="rejected">Reject</button></div>`:""}</div>`; }).join(""));
+  } catch(err){ $("revBody").textContent = "Can’t load claims: " + (err.code||err.message); }
+}
+$("revBody").addEventListener("click", async e => {
+  const b = e.target.closest("button[data-c]"); if (!b) return;
+  try {
+    await updateDoc(doc(db,"items",b.dataset.i,"claims",b.dataset.c), {status:b.dataset.s});
+    if (b.dataset.s==="approved") await updateDoc(doc(db,"items",b.dataset.i), {status:"returned"});
+    toast(b.dataset.s==="approved" ? "Approved. Item marked returned." : "Claim rejected."); $("revDlg").close();
+  } catch(err){ toast("Not allowed: " + (err.code||err.message)); }
+});
+</script>
+</body>
+</html>
